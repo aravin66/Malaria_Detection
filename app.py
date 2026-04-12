@@ -2,6 +2,7 @@ import base64
 import json
 import os
 import smtplib
+import threading
 from io import BytesIO
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -58,6 +59,9 @@ JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_HOURS = 12
 PASSWORD_RESET_EXPIRY_MINUTES = 30
 AUTH_SETUP_ERROR = None
+MODEL_LOAD_ERROR = None
+MODEL_REGISTRY = {}
+MODEL_LOCK = threading.Lock()
 SMTP_CONFIG = {
     "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
     "port": int(os.getenv("SMTP_PORT", "587")),
@@ -98,11 +102,6 @@ def build_weights_model():
     model.load_weights(WEIGHTS_MODEL_PATH.as_posix())
     return model
 
-
-MODEL_REGISTRY = {
-    "cnn_h5": load_model(DEPLOYABLE_MODEL_PATH.as_posix()),
-    "weights_h5": build_weights_model(),
-}
 
 MODEL_ASSETS = sorted(path.name for path in MODELS_DIR.glob("*.h5"))
 MODEL_OPTIONS = [
@@ -230,18 +229,36 @@ def get_mysql_connection(include_database=True):
     return mysql.connector.connect(**config)
 
 
+def get_prediction_model(model_name):
+    global MODEL_LOAD_ERROR
+
+    selected_name = model_name if model_name in {"cnn_h5", "weights_h5"} else "cnn_h5"
+    cached_model = MODEL_REGISTRY.get(selected_name)
+    if cached_model is not None:
+        return cached_model
+
+    with MODEL_LOCK:
+        cached_model = MODEL_REGISTRY.get(selected_name)
+        if cached_model is not None:
+            return cached_model
+
+        try:
+            if selected_name == "weights_h5":
+                cached_model = build_weights_model()
+            else:
+                cached_model = load_model(DEPLOYABLE_MODEL_PATH.as_posix())
+            MODEL_REGISTRY[selected_name] = cached_model
+            MODEL_LOAD_ERROR = None
+            return cached_model
+        except Exception as exc:
+            MODEL_LOAD_ERROR = str(exc)
+            raise
+
+
 def ensure_auth_storage():
     global AUTH_SETUP_ERROR
 
     try:
-        root_connection = get_mysql_connection(include_database=False)
-        root_cursor = root_connection.cursor()
-        root_cursor.execute(
-            f"CREATE DATABASE IF NOT EXISTS {MYSQL_DATABASE} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
-        )
-        root_cursor.close()
-        root_connection.close()
-
         database_connection = get_mysql_connection(include_database=True)
         database_cursor = database_connection.cursor(dictionary=True)
         database_cursor.execute(
@@ -488,7 +505,7 @@ def load_current_user():
 
 
 def value_predictor(np_arr, model_name="cnn_h5"):
-    model = MODEL_REGISTRY.get(model_name, MODEL_REGISTRY["cnn_h5"])
+    model = get_prediction_model(model_name)
     result = model.predict(np_arr, verbose=0)
     return result[0]
 
