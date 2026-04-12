@@ -1,0 +1,208 @@
+<svg width="1600" height="980" viewBox="0 0 1600 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F4"/>
+      <stop offset="0.5" stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#F5F9FF"/>
+    </linearGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#C43C4E"/>
+      <stop offset="1" stop-color="#7D1327"/>
+    </linearGradient>
+    <linearGradient id="train" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F8E4B8"/>
+      <stop offset="1" stop-color="#F7C66A"/>
+    </linearGradient>
+    <linearGradient id="app" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#D9F0FF"/>
+      <stop offset="1" stop-color="#A6D4F2"/>
+    </linearGradient>
+    <linearGradient id="store" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#E5F6E8"/>
+      <stop offset="1" stop-color="#B5E0C2"/>
+    </linearGradient>
+    <linearGradient id="ops" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#EFE6FF"/>
+      <stop offset="1" stop-color="#D5C2FF"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#33111A" flood-opacity="0.14"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12V0Z" fill="#7E2436"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12V0Z" fill="#2D6F95"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12V0Z" fill="#2D7A56"/>
+    </marker>
+    <style>
+      .title { font: 700 30px 'Segoe UI', Arial, sans-serif; fill: #21151A; }
+      .subtitle { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #61444D; }
+      .section { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #24151A; }
+      .boxTitle { font: 700 17px 'Segoe UI', Arial, sans-serif; fill: #24151A; }
+      .boxText { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #563B44; }
+      .small { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #6A4B54; }
+      .mini { font: 500 11px 'Segoe UI', Arial, sans-serif; fill: #6A4B54; }
+      .pill { font: 700 11px 'Segoe UI', Arial, sans-serif; fill: white; letter-spacing: 0.6px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="980" fill="url(#bg)"/>
+  <circle cx="1450" cy="110" r="160" fill="#FFE8D8" opacity="0.65"/>
+  <circle cx="129" cy="845" r="130" fill="#FCE2EA" opacity="0.85"/>
+  <circle cx="1510" cy="850" r="120" fill="#E1F0FF" opacity="0.75"/>
+
+  <rect x="44" y="34" width="1512" height="912" rx="30" fill="#FFFFFF" opacity="0.9" filter="url(#shadow)"/>
+
+  <rect x="74" y="56" width="1452" height="96" rx="24" fill="url(#hero)"/>
+  <image href="../design/Logo-Design/DetectorLogo(noBack).png" x="95" y="72" width="62" height="62" preserveAspectRatio="xMidYMid meet"/>
+  <text x="176" y="98" class="title" fill="#FFFFFF">Malaria Detection System Architecture</text>
+  <text x="176" y="126" class="subtitle" fill="#FBE5EA">End-to-end view of the dataset, model training, Flask web app, prediction flow, and supporting services</text>
+
+  <rect x="95" y="178" width="355" height="720" rx="26" fill="url(#train)" opacity="0.42"/>
+  <rect x="474" y="178" width="510" height="720" rx="26" fill="url(#app)" opacity="0.35"/>
+  <rect x="1008" y="178" width="237" height="720" rx="26" fill="url(#store)" opacity="0.45"/>
+  <rect x="1269" y="178" width="230" height="720" rx="26" fill="url(#ops)" opacity="0.38"/>
+
+  <text x="118" y="214" class="section">1. Data and Training Layer</text>
+  <text x="498" y="214" class="section">2. Flask Application Layer</text>
+  <text x="1031" y="214" class="section">3. Models and Storage</text>
+  <text x="1292" y="214" class="section">4. External Services</text>
+
+  <rect x="118" y="242" width="308" height="146" rx="22" fill="#FFFDF7" filter="url(#soft)"/>
+  <rect x="136" y="258" width="108" height="108" rx="18" fill="#F6F0FF"/>
+  <image href="images/parasitized-image.png" x="142" y="264" width="46" height="46" preserveAspectRatio="xMidYMid slice"/>
+  <image href="images/uninfected-image.png" x="194" y="264" width="46" height="46" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="144" y="320" width="88" height="28" rx="14" fill="#A32944"/>
+  <text x="160" y="338" class="pill">CELL IMAGES</text>
+  <text x="262" y="284" class="boxTitle">Microscopy Dataset</text>
+  <text x="262" y="308" class="boxText">NIH / Kaggle thin blood smear cell images</text>
+  <text x="262" y="331" class="boxText">27,558 labeled samples</text>
+  <text x="262" y="354" class="boxText">13,779 parasitized + 13,779 uninfected</text>
+
+  <rect x="118" y="410" width="308" height="140" rx="22" fill="#FFFDF7" filter="url(#soft)"/>
+  <text x="140" y="444" class="boxTitle">Exploration and Preprocessing</text>
+  <text x="140" y="469" class="boxText">Scripts and notebooks inspect dimensions, clean data,</text>
+  <text x="140" y="489" class="boxText">visualize class examples, and normalize images.</text>
+  <text x="140" y="520" class="small">Sources:</text>
+  <text x="199" y="520" class="mini">`Notebooks/`, `script/image_read.py`, `script/holdout_set.py`</text>
+
+  <rect x="118" y="572" width="308" height="140" rx="22" fill="#FFFDF7" filter="url(#soft)"/>
+  <text x="140" y="606" class="boxTitle">CNN Training and Evaluation</text>
+  <text x="140" y="631" class="boxText">Convolutional Neural Network learns parasite patterns</text>
+  <text x="140" y="651" class="boxText">and is evaluated on a holdout/test set.</text>
+  <text x="140" y="682" class="boxText">Reported accuracy in repo: about 95.23%</text>
+
+  <rect x="118" y="734" width="308" height="140" rx="22" fill="#FFFDF7" filter="url(#soft)"/>
+  <text x="140" y="768" class="boxTitle">Deployment Artifacts</text>
+  <text x="140" y="793" class="boxText">Saved models become reusable assets for live inference.</text>
+  <text x="140" y="824" class="boxText">`models/CNN.h5`</text>
+  <text x="140" y="844" class="boxText">`models/model_weights.h5`</text>
+
+  <rect x="498" y="242" width="462" height="145" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="521" y="275" class="boxTitle">User Access and Browser UI</text>
+  <text x="521" y="300" class="boxText">The end user interacts through the Flask website.</text>
+  <image href="../design/webpage_designs/input_form.png" x="708" y="260" width="108" height="88" preserveAspectRatio="xMidYMid slice"/>
+  <image href="../design/webpage_designs/result_page.png" x="829" y="260" width="108" height="88" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="521" y="321" width="160" height="36" rx="18" fill="#8A2036"/>
+  <text x="545" y="344" class="pill">LOGIN / UPLOAD / RESULT</text>
+
+  <rect x="498" y="408" width="220" height="176" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="519" y="440" class="boxTitle">Authentication Module</text>
+  <text x="519" y="466" class="boxText">Routes:</text>
+  <text x="519" y="488" class="mini">`/login`</text>
+  <text x="519" y="508" class="mini">`/register`</text>
+  <text x="519" y="528" class="mini">`/forgot-password`</text>
+  <text x="519" y="548" class="mini">`/reset-password/&lt;token&gt;`</text>
+  <text x="519" y="570" class="boxText">JWT cookie manages signed sessions.</text>
+
+  <rect x="740" y="408" width="220" height="176" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="761" y="440" class="boxTitle">Prediction Workflow</text>
+  <text x="761" y="466" class="mini">1. User uploads cell image</text>
+  <text x="761" y="486" class="mini">2. PIL opens and converts to RGB</text>
+  <text x="761" y="506" class="mini">3. Image resized for CNN input</text>
+  <text x="761" y="526" class="mini">4. TensorFlow model predicts class</text>
+  <text x="761" y="546" class="mini">5. `argmax` selects infected/uninfected</text>
+  <text x="761" y="568" class="boxText">Routes: `/form`, `/result`, `/submit`</text>
+
+  <rect x="498" y="606" width="220" height="190" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="519" y="638" class="boxTitle">Result Presentation</text>
+  <text x="519" y="665" class="boxText">Displays:</text>
+  <text x="519" y="687" class="mini">Prediction label</text>
+  <text x="519" y="707" class="mini">Confidence score</text>
+  <text x="519" y="727" class="mini">Uploaded image preview</text>
+  <text x="519" y="747" class="mini">Class summary and guidance text</text>
+  <text x="519" y="769" class="boxText">`result.html` renders the final output.</text>
+
+  <rect x="740" y="606" width="220" height="190" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="761" y="638" class="boxTitle">Analytics and Utility Pages</text>
+  <text x="761" y="665" class="mini">`/performance` for model metrics</text>
+  <text x="761" y="685" class="mini">`/graph` for chart visualizations</text>
+  <text x="761" y="705" class="mini">`/profile/avatar` for image upload</text>
+  <text x="761" y="725" class="mini">`/logout` and custom `404` page</text>
+  <text x="761" y="758" class="boxText">Session stores the latest analysis for</text>
+  <text x="761" y="778" class="boxText">performance recap and graph pages.</text>
+
+  <rect x="1031" y="242" width="191" height="154" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1052" y="276" class="boxTitle">Inference Models</text>
+  <text x="1052" y="303" class="mini">`CNN.h5` production model</text>
+  <text x="1052" y="323" class="mini">`model_weights.h5` rebuilt architecture</text>
+  <text x="1052" y="353" class="boxText">Loaded with TensorFlow / Keras at app startup.</text>
+
+  <rect x="1031" y="418" width="191" height="154" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1052" y="452" class="boxTitle">MySQL User Store</text>
+  <text x="1052" y="479" class="mini">`users` table</text>
+  <text x="1052" y="499" class="mini">username</text>
+  <text x="1052" y="519" class="mini">email</text>
+  <text x="1052" y="539" class="mini">password hash</text>
+  <text x="1052" y="559" class="mini">profile image + created date</text>
+
+  <rect x="1031" y="594" width="191" height="154" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1052" y="628" class="boxTitle">Static and Session Assets</text>
+  <text x="1052" y="655" class="mini">Uploaded profile pictures</text>
+  <text x="1052" y="675" class="mini">Image data URL for preview</text>
+  <text x="1052" y="695" class="mini">Last analysis in Flask session</text>
+  <text x="1052" y="725" class="boxText">Supports user personalization and recap.</text>
+
+  <rect x="1292" y="242" width="184" height="164" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1313" y="276" class="boxTitle">SMTP Email Service</text>
+  <text x="1313" y="304" class="boxText">Used for password reset emails</text>
+  <text x="1313" y="327" class="boxText">through configured SMTP host.</text>
+  <text x="1313" y="360" class="mini">Default example: Gmail SMTP</text>
+
+  <rect x="1292" y="430" width="184" height="164" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1313" y="464" class="boxTitle">Presentation Templates</text>
+  <text x="1313" y="492" class="boxText">HTML pages in `templates/`</text>
+  <text x="1313" y="515" class="boxText">and assets in `static/` shape the</text>
+  <text x="1313" y="538" class="boxText">screens the user sees.</text>
+
+  <rect x="1292" y="618" width="184" height="164" rx="22" fill="#FFFFFF" filter="url(#soft)"/>
+  <text x="1313" y="652" class="boxTitle">Testing and Validation</text>
+  <text x="1313" y="680" class="boxText">Basic route tests verify that core</text>
+  <text x="1313" y="703" class="boxText">pages respond successfully.</text>
+  <text x="1313" y="736" class="mini">`tests/test_app.py`</text>
+
+  <path d="M272 388V410" stroke="#7E2436" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M272 550V572" stroke="#7E2436" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M272 712V734" stroke="#7E2436" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <path d="M426 804C462 804 460 319 498 319" stroke="#7E2436" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M718 495H740" stroke="#2D6F95" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <path d="M718 701H740" stroke="#2D6F95" stroke-width="4" marker-end="url(#arrowBlue)"/>
+
+  <path d="M960 496C1001 496 993 319 1031 319" stroke="#2D6F95" stroke-width="4" fill="none" marker-end="url(#arrowBlue)"/>
+  <path d="M960 496C1001 496 993 495 1031 495" stroke="#2D6F95" stroke-width="4" fill="none" marker-end="url(#arrowBlue)"/>
+  <path d="M960 701C1001 701 993 671 1031 671" stroke="#2D6F95" stroke-width="4" fill="none" marker-end="url(#arrowBlue)"/>
+
+  <path d="M1222 495H1292" stroke="#2D7A56" stroke-width="4" marker-end="url(#arrowGreen)"/>
+  <path d="M611 408C611 348 1031 348 1031 348" stroke="#2D6F95" stroke-width="3" stroke-dasharray="7 7" fill="none"/>
+
+  <rect x="118" y="904" width="1358" height="24" rx="12" fill="#F8EDF0"/>
+  <text x="144" y="920" class="small">Primary runtime flow:</text>
+  <text x="276" y="920" class="mini">User signs in → uploads microscopy image → Flask preprocesses image → CNN predicts infected/uninfected → result, metrics, and recap views are rendered</text>
+</svg>

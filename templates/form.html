@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Preview{% endblock %}
+
+{% block content %}
+<section class="center-stage">
+    <div class="upload-shell glass-card">
+        <div class="upload-icon">UPL</div>
+        <h1>Upload Image</h1>
+        <p class="section-subtitle">Malaria Detection in Blood Smear Images using Deep Learning</p>
+
+        <form action="{{ url_for('result') }}" method="post" enctype="multipart/form-data" class="upload-form" data-upload-form>
+            <label class="upload-zone" for="imageInput" data-drop-zone>
+                <input id="imageInput" type="file" name="pic" accept=".jpg,.jpeg,.png" hidden data-file-input>
+                <div class="upload-zone-icon">IMG</div>
+                <strong>Click to browse</strong>
+                <span>or drag and drop</span>
+                <small>Supported formats: JPG, PNG, JPEG</small>
+                <em data-file-name>No file selected</em>
+            </label>
+
+            <div class="field-group">
+                <label for="model_name">Select Model</label>
+                <select id="model_name" name="model_name" class="neon-input">
+                    {% for model in model_options %}
+                    <option value="{{ model.id }}" {% if selected_model == model.id %}selected{% endif %} {% if not model.available %}disabled{% endif %}>
+                        {{ model.label }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <p class="field-hint">Both saved model assets are now available. `CNN.h5` loads directly, while `model_weights.h5` runs through its reconstructed architecture.</p>
+            </div>
+
+            <div class="instruction-card">
+                <h3>Instructions</h3>
+                <ul>
+                    <li>Upload a clear segmented blood cell microscopy image.</li>
+                    <li>Use the deployable <code>CNN.h5</code> option for live prediction.</li>
+                    <li>The result page will show the analyzed image, confidence, and follow-up actions.</li>
+                </ul>
+            </div>
+
+            {% if error %}
+            <p class="error-banner">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary btn-wide">Analyze Sample</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

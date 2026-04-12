@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Charts{% endblock %}
+
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="section-block compact-top">
+    <div class="section-heading">
+        <h2>Visualization Charts</h2>
+        <p>Model accuracy and dataset summaries built from repository metrics and dataset counts.</p>
+    </div>
+
+    <div class="chart-stack compact-chart-stack">
+        <article class="glass-card chart-card compact-chart-card">
+            <h3>Model Accuracy Comparison</h3>
+            <div class="chart-frame">
+                <canvas id="accuracyChart"></canvas>
+            </div>
+        </article>
+
+        <article class="glass-card chart-card compact-chart-card">
+            <h3>Dataset Distribution</h3>
+            <div class="chart-frame pie-chart-frame">
+                <canvas id="datasetChart"></canvas>
+            </div>
+        </article>
+
+        <article class="glass-card chart-card compact-chart-card">
+            <h3>Training and Testing Image Distribution</h3>
+            <div class="chart-frame">
+                <canvas id="splitChart"></canvas>
+            </div>
+        </article>
+    </div>
+    <script id="charts-data" type="application/json">{{ charts_json|safe }}</script>
+</section>
+{% endblock %}

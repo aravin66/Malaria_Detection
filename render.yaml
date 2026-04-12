@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: malaria-detection
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /healthz
+    disk:
+      name: profile-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: PROFILE_UPLOAD_DIR
+        value: /var/data/profile_pics
+      - key: APP_BASE_URL
+        sync: false
+      - key: MYSQL_HOST
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_USER
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: MYSQL_DATABASE
+        value: malaria_database
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM_EMAIL
+        sync: false
+      - key: SMTP_USE_TLS
+        value: "true"

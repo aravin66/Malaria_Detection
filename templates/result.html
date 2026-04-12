@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Result{% endblock %}
+
+{% block content %}
+<section class="result-layout">
+    <article class="glass-card result-image-card">
+        <div class="result-preview-frame">
+            <img src="{{ image_data_url }}" alt="Analyzed blood cell image">
+        </div>
+        <div class="result-meta">
+            <span>Analyzed Cell Image</span>
+            <small>{{ uploaded_filename }}</small>
+        </div>
+    </article>
+
+    <article class="glass-card result-copy-card {{ prediction_tone }}">
+        <div class="result-status-icon">OK</div>
+        <p class="eyebrow">Detection Result</p>
+        <div class="result-kicker">{{ prediction_badge }}</div>
+        <h1>{{ prediction }}</h1>
+        <h2>{{ prediction_symptoms }}</h2>
+        <p>{{ prediction_description }}</p>
+
+        <div class="result-detail-grid">
+            <div class="detail-box">
+                <span>Confidence</span>
+                <strong>{{ confidence }}%</strong>
+            </div>
+            <div class="detail-box">
+                <span>Model Used</span>
+                <strong>{{ selected_model_label }}</strong>
+            </div>
+            <div class="detail-box">
+                <span>Infected Score</span>
+                <strong>{{ '%.2f'|format(sample_analysis.infected_score) }}%</strong>
+            </div>
+            <div class="detail-box">
+                <span>Uninfected Score</span>
+                <strong>{{ '%.2f'|format(sample_analysis.uninfected_score) }}%</strong>
+            </div>
+        </div>
+
+        <div class="result-summary-box">
+            <p>{{ prediction_summary }}</p>
+        </div>
+
+        <div class="action-stack">
+            <button
+                class="btn btn-primary"
+                type="button"
+                data-download-result
+                data-prediction="{{ prediction }}"
+                data-confidence="{{ confidence }}"
+                data-model="{{ selected_model_label }}"
+                data-file="{{ uploaded_filename }}"
+            >
+                Download Result
+            </button>
+            <a class="btn btn-secondary" href="{{ url_for('form') }}">Analyze Another</a>
+            <a class="btn btn-secondary" href="{{ url_for('performance') }}">View Performance</a>
+        </div>
+    </article>
+</section>
+{% endblock %}

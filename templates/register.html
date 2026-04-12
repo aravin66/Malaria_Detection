@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Register{% endblock %}
+
+{% block content %}
+<section class="center-stage">
+    <div class="auth-card glass-card auth-card-compact">
+        <h1>Register</h1>
+
+        <form action="{{ url_for('register') }}" method="post" class="auth-form">
+            {% if auth_setup_error %}
+            <p class="error-banner">Database connection error: {{ auth_setup_error }}</p>
+            {% endif %}
+            {% if error %}
+            <p class="error-banner">{{ error }}</p>
+            {% endif %}
+            <div class="field-group">
+                <label for="username">Username</label>
+                <input id="username" name="username" class="neon-input" type="text" placeholder="Choose a username" value="{{ form_values.username if form_values else '' }}">
+            </div>
+
+            <div class="field-group">
+                <label for="email">Email</label>
+                <input id="email" name="email" class="neon-input" type="email" placeholder="Enter your email" value="{{ form_values.email if form_values else '' }}">
+            </div>
+
+            <div class="field-group">
+                <label for="password">Password</label>
+                <input id="password" name="password" class="neon-input" type="password" placeholder="Create a password">
+            </div>
+
+            <div class="field-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input id="confirm_password" name="confirm_password" class="neon-input" type="password" placeholder="Repeat your password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-wide">Register</button>
+            <p class="auth-switch">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+        </form>
+    </div>
+</section>
+{% endblock %}

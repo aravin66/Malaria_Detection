@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Performance{% endblock %}
+
+{% block content %}
+<section class="section-block compact-top">
+    <div class="section-heading">
+        <h2>Performance Analysis</h2>
+        <p>Live uploaded-image scores plus repo-backed model reference metrics.</p>
+    </div>
+
+    {% if last_analysis %}
+    <article class="glass-card performance-card live-analysis-card highlight">
+        <div class="performance-header">
+            <div class="icon-chip">LIVE</div>
+            <div>
+                <h3>Last Uploaded Image</h3>
+                <p>These values change with each uploaded image and come from the current model output.</p>
+            </div>
+        </div>
+
+        <div class="metric-grid compact-metrics">
+            <div class="metric-box">
+                <span>Model</span>
+                <strong>{{ last_analysis.model_name }}</strong>
+            </div>
+            <div class="metric-box">
+                <span>Prediction</span>
+                <strong>{{ last_analysis.predicted_label }}</strong>
+            </div>
+            <div class="metric-box">
+                <span>Confidence</span>
+                <strong>{{ '%.2f'|format(last_analysis.confidence) }}%</strong>
+            </div>
+            <div class="metric-box">
+                <span>Infected Score</span>
+                <strong>{{ '%.2f'|format(last_analysis.infected_score) }}%</strong>
+            </div>
+            <div class="metric-box">
+                <span>Uninfected Score</span>
+                <strong>{{ '%.2f'|format(last_analysis.uninfected_score) }}%</strong>
+            </div>
+        </div>
+
+        <div class="confusion-box">
+            <h4>Uploaded Image Score Matrix</h4>
+            <div class="confusion-grid compact-grid">
+                {% for row in last_analysis.score_matrix %}
+                    {% for value in row %}
+                    <div>{{ '%.2f'|format(value) }}</div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            <p class="performance-note">A true confusion matrix cannot be generated from one uploaded image unless its real label is known. This score matrix shows the model probabilities for your uploaded image.</p>
+        </div>
+    </article>
+    {% endif %}
+
+    <div class="section-heading section-heading-small">
+        <h2>Reference Metrics</h2>
+        <p>These are dataset-level benchmark values from the repository and stay constant across uploads.</p>
+    </div>
+
+    <div class="performance-grid">
+        {% for model in performance_models %}
+        <article class="glass-card performance-card {% if model.highlight %}highlight{% endif %}">
+            <div class="performance-header">
+                <div class="icon-chip">{{ "CNN" if model.highlight else "REF" }}</div>
+                <div>
+                    <h3>{{ model.name }}</h3>
+                    <p>{{ model.subtitle }}</p>
+                </div>
+            </div>
+
+            <div class="metric-grid compact-metrics">
+                <div class="metric-box">
+                    <span>Accuracy</span>
+                    <strong>{{ '%.3f'|format(model.accuracy) }}</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Precision</span>
+                    <strong>{{ '%.3f'|format(model.precision) }}</strong>
+                </div>
+                <div class="metric-box">
+                    <span>Recall</span>
+                    <strong>{{ '%.3f'|format(model.recall) }}</strong>
+                </div>
+                <div class="metric-box">
+                    <span>F-Measure</span>
+                    <strong>{{ '%.3f'|format(model.f1) }}</strong>
+                </div>
+            </div>
+
+            <div class="confusion-box">
+                <h4>Confusion Snapshot</h4>
+                <div class="confusion-grid compact-grid">
+                    {% for row in model.confusion %}
+                        {% for value in row %}
+                        <div>{{ value }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <p class="availability-note">{{ model.availability }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

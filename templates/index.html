@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | Home{% endblock %}
+
+{% block content %}
+<section class="hero section-grid">
+    <div class="hero-copy">
+        <div class="pill-tag">AI-Powered Medical Technology</div>
+        <h1>Malaria Detection in Blood Smear Images using Deep Learning</h1>
+        <p class="hero-text">
+            A streamlined diagnostic interface for microscopy image screening, powered by the saved CNN model in your project and styled to match your reference design.
+        </p>
+        <div class="hero-actions">
+            <a class="btn btn-primary" href="{{ url_for('form') }}">Start Detection</a>
+            <a class="btn btn-secondary" href="#features">Explore Features</a>
+        </div>
+    </div>
+
+    <div class="hero-visual hero-panel">
+        <div class="orbital-ring"></div>
+        <div class="hero-badge">Live Model Asset</div>
+        <div class="hero-visual-icon">MIC</div>
+        <p class="hero-side-note">Deployable model: {{ model_assets[0] if model_assets else 'CNN.h5' }}</p>
+    </div>
+</section>
+
+<section id="features" class="section-block">
+    <div class="section-heading">
+        <h2>Key Features</h2>
+        <p>Advanced malaria screening workflow inspired by your uploaded UI references.</p>
+    </div>
+
+    <div class="feature-grid">
+        {% for feature in features %}
+        <article class="glass-card feature-card">
+            <div class="icon-chip">{{ feature.icon }}</div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="stats-strip">
+    <article class="stat-card glass-card">
+        <strong>{{ app_stats.training_images }}</strong>
+        <span>Training Images</span>
+    </article>
+    <article class="stat-card glass-card highlight">
+        <strong>{{ app_stats.accuracy_rate }}</strong>
+        <span>Accuracy Rate</span>
+    </article>
+    <article class="stat-card glass-card">
+        <strong>{{ app_stats.deployable_models }}</strong>
+        <span>Deployable Models</span>
+    </article>
+    <article class="stat-card glass-card">
+        <strong>{{ app_stats.model_assets }}</strong>
+        <span>Model Assets</span>
+    </article>
+</section>
+
+<section class="about-section section-grid">
+    <div class="about-visual glass-card">
+        <div class="about-shape"></div>
+        <div class="about-icon">RBC</div>
+    </div>
+    <div class="about-copy">
+        <h2>About</h2>
+        <p>
+            This project uses deep learning to classify segmented blood smear cell images as infected or uninfected. The repository documentation and notebooks report a test accuracy of about 95.23 percent for the CNN workflow saved in <code>models/CNN.h5</code>.
+        </p>
+        <p>
+            The refreshed interface keeps your original Flask app functional while bringing it closer to the multi-section dashboard shown in your screenshots.
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Malaria AI | 404{% endblock %}
+
+{% block content %}
+<section class="center-stage">
+    <div class="glass-card auth-card">
+        <div class="upload-icon">404</div>
+        <h1>Page Not Found</h1>
+        <p class="section-subtitle">The route you requested is not available in this Flask app.</p>
+        <a class="btn btn-primary btn-wide" href="{{ url_for('home') }}">Return Home</a>
+    </div>
+</section>
+{% endblock %}

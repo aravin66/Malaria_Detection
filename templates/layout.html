@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Malaria AI{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/icon.png', v=asset_version('images/icon.png')) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css', v=asset_version('css/app.css')) }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <div class="page-shell">
+        <div class="ambient ambient-one"></div>
+        <div class="ambient ambient-two"></div>
+        <div class="ambient ambient-three"></div>
+
+        <header class="site-header">
+            <div class="header-main">
+                <a class="brand" href="{{ url_for('home') }}">
+                    <span class="brand-name">Malaria AI</span>
+                </a>
+
+                <nav class="site-nav">
+                    <a class="{% if active_page == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
+                    {% if current_user %}
+                    <a class="{% if active_page == 'preview' %}active{% endif %}" href="{{ url_for('form') }}">Preview</a>
+                    <a class="{% if active_page == 'performance' %}active{% endif %}" href="{{ url_for('performance') }}">Performance</a>
+                    <a class="{% if active_page == 'graph' %}active{% endif %}" href="{{ url_for('graph') }}">Chart</a>
+                    {% else %}
+                    <a class="{% if active_page == 'login' %}active{% endif %}" href="{{ url_for('login') }}">Login</a>
+                    <a class="{% if active_page == 'register' %}active{% endif %}" href="{{ url_for('register') }}">Register</a>
+                    {% endif %}
+                </nav>
+            </div>
+
+            <div class="header-user-slot">
+                {% if current_user %}
+                <div class="profile-menu" data-profile-menu>
+                    <button class="profile-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="profile-panel">
+                        <span class="profile-greeting">
+                            <small>Hi,</small>
+                            <strong>{{ current_user.username }}</strong>
+                        </span>
+                        {% if current_user_profile_image %}
+                        <img class="profile-avatar" src="{{ current_user_profile_image }}" alt="{{ current_user.username }} profile picture">
+                        {% else %}
+                        <span class="profile-avatar profile-avatar-fallback">{{ current_user_initials }}</span>
+                        {% endif %}
+                        <span class="profile-chevron" aria-hidden="true"></span>
+                    </button>
+
+                    <div id="profile-panel" class="profile-panel glass-card" hidden>
+                        <div class="profile-card-shell">
+                            <div class="profile-panel-top">
+                                {% if current_user_profile_image %}
+                                <img class="profile-avatar profile-avatar-large" src="{{ current_user_profile_image }}" alt="{{ current_user.username }} profile picture">
+                                {% else %}
+                                <span class="profile-avatar profile-avatar-large profile-avatar-fallback">{{ current_user_initials }}</span>
+                                {% endif %}
+                                <div class="profile-panel-copy">
+                                    <strong>{{ current_user.username }}</strong>
+                                    <p>{{ current_user.email }}</p>
+                                </div>
+                            </div>
+
+                            <form action="{{ url_for('update_profile_avatar') }}" method="post" enctype="multipart/form-data" class="profile-upload-form">
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <label for="profile_image" class="profile-upload-label">Upload profile photo</label>
+                                <input id="profile_image" name="profile_image" class="neon-input neon-file-input" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp">
+                                <button class="btn btn-secondary btn-wide profile-upload-button" type="submit">Save profile photo</button>
+                            </form>
+                        </div>
+
+                        <div class="profile-menu-list">
+                            <a class="profile-menu-item" href="{{ url_for('form') }}">
+                                <span class="profile-menu-icon">PR</span>
+                                <span class="profile-menu-text">
+                                    <strong>Preview Dashboard</strong>
+                                    <small>Go to image upload and diagnosis</small>
+                                </span>
+                                <span class="profile-menu-arrow" aria-hidden="true"></span>
+                            </a>
+                            <a class="profile-menu-item" href="{{ url_for('performance') }}">
+                                <span class="profile-menu-icon">PF</span>
+                                <span class="profile-menu-text">
+                                    <strong>Performance</strong>
+                                    <small>Check accuracy and model metrics</small>
+                                </span>
+                                <span class="profile-menu-arrow" aria-hidden="true"></span>
+                            </a>
+                            <a class="profile-menu-item" href="{{ url_for('graph') }}">
+                                <span class="profile-menu-icon">CH</span>
+                                <span class="profile-menu-text">
+                                    <strong>Charts</strong>
+                                    <small>Open analytics visualizations</small>
+                                </span>
+                                <span class="profile-menu-arrow" aria-hidden="true"></span>
+                            </a>
+                            <a class="profile-menu-item profile-menu-item-danger" href="{{ url_for('logout') }}">
+                                <span class="profile-menu-icon">LO</span>
+                                <span class="profile-menu-text">
+                                    <strong>Logout</strong>
+                                    <small>Sign out from your account</small>
+                                </span>
+                                <span class="profile-menu-arrow" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <main>
+            {% if profile_error %}
+            <p class="error-banner header-banner">{{ profile_error }}</p>
+            {% endif %}
+            {% if profile_message %}
+            <p class="success-banner header-banner">{{ profile_message }}</p>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js', v=asset_version('js/app.js')) }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

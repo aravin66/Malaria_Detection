@@ -1,0 +1,25 @@
+Flask==1.1.2
+Flask-Misaka==1.0.0
+jinja2==2.11.2
+Flask-SQLAlchemy==2.4.4
+gunicorn==20.0.4
+numpy==1.23.5
+tensorflow==2.10.0
+Keras-Preprocessing==1.1.2
+wheel==0.38.4
+setuptools==65.5.0
+psycopg2-binary==2.9.6
+Pillow==9.2.0
+opencv-python==4.6.0.66
+pytest==6.0.2
+mysql-connector-python==9.6.0
+PyJWT==2.12.1
+
+# Pin MarkupSafe to a 2.0.x release for compatibility with Jinja2 2.11
+MarkupSafe==2.0.1
+
+# Pin itsdangerous 1.1.0 for Flask 1.1.2 compatibility
+itsdangerous==1.1.0
+
+# Werkzeug 1.x is required by Flask 1.1.2
+Werkzeug==1.0.1
