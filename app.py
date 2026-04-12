@@ -501,6 +501,9 @@ def jwt_login_required(view_func):
 
 @app.before_request
 def load_current_user():
+    if request.endpoint == "healthz":
+        g.current_user = None
+        return
     g.current_user = get_authenticated_user()
 
 
