@@ -958,8 +958,18 @@ def not_found(error):
 
 # 🔥 Run app
 if __name__ == "__main__":
+    port = int(os.getenv("PORT", "10000"))
+    # When running directly, open the default browser to the local URL.
+    # Keep this safe for production: it's inside the __main__ guard.
+    try:
+        import webbrowser
+
+        threading.Timer(0.5, lambda: webbrowser.open(f"http://127.0.0.1:{port}/")).start()
+    except Exception:
+        pass
+
     app.run(
         host="0.0.0.0",
-        port=int(os.getenv("PORT", "10000")),
+        port=port,
         debug=os.getenv("FLASK_DEBUG", "false").lower() == "true",
     )
