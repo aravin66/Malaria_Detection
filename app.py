@@ -14,9 +14,6 @@ import mysql.connector
 import numpy as np
 from flask import Flask, g, make_response, redirect, render_template, request, send_from_directory, session, url_for
 from PIL import Image
-from tensorflow.keras.layers import BatchNormalization, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
-from tensorflow.keras.models import load_model
-from tensorflow.keras.models import Sequential
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -62,6 +59,7 @@ AUTH_SETUP_ERROR = None
 MODEL_LOAD_ERROR = None
 MODEL_REGISTRY = {}
 MODEL_LOCK = threading.Lock()
+MODEL_WARMUP_STARTED = False
 SMTP_CONFIG = {
     "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
     "port": int(os.getenv("SMTP_PORT", "587")),
@@ -81,7 +79,18 @@ ALLOWED_PROFILE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 def profile_uploads_use_static_dir():
     return PROFILE_UPLOAD_DIR.resolve(strict=False) == STATIC_PROFILE_UPLOAD_DIR.resolve(strict=False)
 
+
 def build_weights_model():
+    from tensorflow.keras.layers import (
+        BatchNormalization,
+        Conv2D,
+        Dense,
+        Dropout,
+        Flatten,
+        MaxPooling2D,
+    )
+    from tensorflow.keras.models import Sequential
+
     model = Sequential()
     model.add(Conv2D(32, (3, 3), input_shape=(50, 50, 3), activation="relu"))
     model.add(MaxPooling2D((2, 2)))
@@ -246,6 +255,8 @@ def get_prediction_model(model_name):
             if selected_name == "weights_h5":
                 cached_model = build_weights_model()
             else:
+                from tensorflow.keras.models import load_model
+
                 cached_model = load_model(DEPLOYABLE_MODEL_PATH.as_posix())
             MODEL_REGISTRY[selected_name] = cached_model
             MODEL_LOAD_ERROR = None
@@ -253,6 +264,27 @@ def get_prediction_model(model_name):
         except Exception as exc:
             MODEL_LOAD_ERROR = str(exc)
             raise
+
+
+def start_model_warmup():
+    global MODEL_WARMUP_STARTED
+
+    if MODEL_WARMUP_STARTED:
+        return
+
+    with MODEL_LOCK:
+        if MODEL_WARMUP_STARTED:
+            return
+        MODEL_WARMUP_STARTED = True
+
+    def warmup():
+        try:
+            get_prediction_model("cnn_h5")
+        except Exception:
+            # Keep startup resilient; prediction requests can surface load issues later.
+            pass
+
+    threading.Thread(target=warmup, daemon=True).start()
 
 
 def ensure_auth_storage():
@@ -505,6 +537,11 @@ def load_current_user():
         g.current_user = None
         return
     g.current_user = get_authenticated_user()
+
+
+@app.before_first_request
+def schedule_model_warmup():
+    start_model_warmup()
 
 
 def value_predictor(np_arr, model_name="cnn_h5"):
@@ -923,6 +960,6 @@ def not_found(error):
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
-        port=int(os.getenv("PORT", "5000")),
+        port=int(os.getenv("PORT", "10000")),
         debug=os.getenv("FLASK_DEBUG", "false").lower() == "true",
     )
