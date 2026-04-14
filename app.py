@@ -34,6 +34,13 @@ def load_local_env():
 load_local_env()
 
 app = Flask(__name__)
+
+# Minimal health check endpoint for Render health probes.
+# Must be extremely fast and must not touch DB, models, auth, etc.
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return "OK", 200
+
 app.config["SECRET_KEY"] = os.getenv(
     "FLASK_SECRET_KEY",
     "malaria-ai-development-secret-key-please-change",
