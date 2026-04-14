@@ -664,13 +664,6 @@ def build_sample_analysis(raw_result, prediction_index, model_name):
 @app.route("/")
 def home():
     return render_template("index.html", **common_context("home"))
-
-
-@app.route("/healthz")
-def healthz():
-    return {"status": "ok"}, 200
-
-
 @app.route("/profile-images/<path:filename>")
 def profile_image(filename):
     return send_from_directory(PROFILE_UPLOAD_DIR, filename)
