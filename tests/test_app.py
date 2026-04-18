@@ -1,3 +1,37 @@
+from app import parse_mysql_url, resolve_mysql_settings
+
+
+def test_parse_mysql_url():
+    parsed = parse_mysql_url("mysql://root:secret@metro.proxy.rlwy.net:21559/railway")
+    assert parsed == {
+        "host": "metro.proxy.rlwy.net",
+        "port": 21559,
+        "user": "root",
+        "password": "secret",
+        "database": "railway",
+    }
+
+
+def test_resolve_mysql_settings_prefers_mysql_url():
+    base_config, database = resolve_mysql_settings(
+        {
+            "MYSQL_URL": "mysql://root:secret@metro.proxy.rlwy.net:21559/railway",
+            "MYSQL_HOST": "localhost",
+            "MYSQL_PORT": "3306",
+            "MYSQL_USER": "root",
+            "MYSQL_PASSWORD": "wrong",
+            "MYSQL_DATABASE": "malaria_database",
+        }
+    )
+    assert base_config == {
+        "host": "metro.proxy.rlwy.net",
+        "port": 21559,
+        "user": "root",
+        "password": "secret",
+    }
+    assert database == "railway"
+
+
 def test_healthz(client):
     res = client.get("/healthz")
     assert res.status_code == 200

@@ -8,6 +8,7 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from functools import wraps
+from urllib.parse import unquote, urlparse
 
 import jwt
 import mysql.connector
@@ -55,13 +56,44 @@ MODELS_DIR = BASE_DIR / "models"
 DEPLOYABLE_MODEL_PATH = MODELS_DIR / "CNN.h5"
 WEIGHTS_MODEL_PATH = MODELS_DIR / "model_weights.h5"
 
-MYSQL_BASE_CONFIG = {
-    "host": os.getenv("MYSQL_HOST", "localhost"),
-    "port": int(os.getenv("MYSQL_PORT", "3306")),
-    "user": os.getenv("MYSQL_USER", ""),
-    "password": os.getenv("MYSQL_PASSWORD", ""),
-}
-MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "malaria_database")
+def parse_mysql_url(mysql_url):
+    parsed = urlparse(mysql_url)
+    if parsed.scheme not in {"mysql", "mysql+mysqlconnector"} or not parsed.hostname:
+        return None
+
+    database_name = parsed.path.lstrip("/") or None
+    return {
+        "host": parsed.hostname,
+        "port": parsed.port or 3306,
+        "user": unquote(parsed.username or ""),
+        "password": unquote(parsed.password or ""),
+        "database": database_name,
+    }
+
+
+def resolve_mysql_settings(env=None):
+    env = os.environ if env is None else env
+    mysql_url = env.get("MYSQL_URL") or env.get("DATABASE_URL")
+
+    if mysql_url:
+        parsed = parse_mysql_url(mysql_url)
+        if parsed is not None:
+            return {
+                "host": parsed["host"],
+                "port": parsed["port"],
+                "user": parsed["user"],
+                "password": parsed["password"],
+            }, env.get("MYSQL_DATABASE") or parsed["database"] or "malaria_database"
+
+    return {
+        "host": env.get("MYSQL_HOST", "localhost"),
+        "port": int(env.get("MYSQL_PORT", "3306")),
+        "user": env.get("MYSQL_USER", ""),
+        "password": env.get("MYSQL_PASSWORD", ""),
+    }, env.get("MYSQL_DATABASE", "malaria_database")
+
+
+MYSQL_BASE_CONFIG, MYSQL_DATABASE = resolve_mysql_settings()
 JWT_COOKIE_NAME = "malaria_access_token"
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRY_HOURS = 12
