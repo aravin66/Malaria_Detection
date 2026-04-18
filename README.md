@@ -37,7 +37,7 @@ This repo includes a minimal `render.yaml` blueprint for Render.
 1. Push the project to GitHub.
 2. In Render, create a new Blueprint or Web Service from this repo.
 3. Fill in the required environment variables for `APP_BASE_URL`, `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, `SMTP_USER`, `SMTP_PASSWORD`, and `SMTP_FROM_EMAIL`.
-4. If you deploy on Railway, prefer setting `MYSQL_URL` from the MySQL service connection panel. The app now understands Railway-style URLs like `mysql://user:password@host:port/database`.
+4. If you deploy on Railway, prefer setting `MYSQL_URL` from the MySQL service connection panel. The app now understands Railway-style URLs like `mysql://user:password@host:port/database` and will use the database name from that URL.
 5. After the first deploy, set `APP_BASE_URL` to your public service URL, such as `https://your-service-name.onrender.com`.
 6. If you are not using `MYSQL_URL`, use your MySQL server details for the `MYSQL_*` variables.
 

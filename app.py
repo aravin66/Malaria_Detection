@@ -83,7 +83,7 @@ def resolve_mysql_settings(env=None):
                 "port": parsed["port"],
                 "user": parsed["user"],
                 "password": parsed["password"],
-            }, env.get("MYSQL_DATABASE") or parsed["database"] or "malaria_database"
+            }, parsed["database"] or env.get("MYSQL_DATABASE") or "malaria_database"
 
     return {
         "host": env.get("MYSQL_HOST", "localhost"),
@@ -103,6 +103,7 @@ MODEL_LOAD_ERROR = None
 MODEL_REGISTRY = {}
 MODEL_LOCK = threading.Lock()
 MODEL_WARMUP_STARTED = False
+AUTH_STORAGE_READY = False
 SMTP_CONFIG = {
     "host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
     "port": int(os.getenv("SMTP_PORT", "587")),
@@ -288,6 +289,7 @@ def get_mysql_connection(include_database=True):
     config = dict(MYSQL_BASE_CONFIG)
     if include_database:
         config["database"] = MYSQL_DATABASE
+    config["connection_timeout"] = int(os.getenv("MYSQL_CONNECTION_TIMEOUT", "5"))
     return mysql.connector.connect(**config)
 
 
@@ -341,7 +343,10 @@ def start_model_warmup():
 
 
 def ensure_auth_storage():
-    global AUTH_SETUP_ERROR
+    global AUTH_SETUP_ERROR, AUTH_STORAGE_READY
+
+    if AUTH_STORAGE_READY:
+        return True
 
     try:
         database_connection = get_mysql_connection(include_database=True)
@@ -365,6 +370,7 @@ def ensure_auth_storage():
         database_cursor.close()
         database_connection.close()
         AUTH_SETUP_ERROR = None
+        AUTH_STORAGE_READY = True
         return True
     except mysql.connector.Error as exc:
         AUTH_SETUP_ERROR = str(exc)

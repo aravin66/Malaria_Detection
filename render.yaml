@@ -17,16 +17,8 @@ services:
         value: static/uploads/profile_pics
       - key: APP_BASE_URL
         sync: false
-      - key: MYSQL_HOST
+      - key: MYSQL_URL
         sync: false
-      - key: MYSQL_PORT
-        value: "3306"
-      - key: MYSQL_USER
-        sync: false
-      - key: MYSQL_PASSWORD
-        sync: false
-      - key: MYSQL_DATABASE
-        value: malaria_database
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
