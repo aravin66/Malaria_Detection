@@ -85,6 +85,16 @@ PROFILE_UPLOAD_DIR = Path(
     os.getenv("PROFILE_UPLOAD_DIR", STATIC_PROFILE_UPLOAD_DIR.as_posix())
 ).expanduser()
 ALLOWED_PROFILE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+PUBLIC_ENDPOINTS = {
+    "healthz",
+    "home",
+    "login",
+    "register",
+    "forgot_password",
+    "reset_password",
+    "profile_image",
+    "static",
+}
 
 
 def profile_uploads_use_static_dir():
@@ -544,14 +554,9 @@ def jwt_login_required(view_func):
 
 @app.before_request
 def load_current_user():
-    if request.endpoint == "healthz":
+    if request.endpoint in PUBLIC_ENDPOINTS:
         g.current_user = None
         return
-
-    # Render's port probe uses HEAD /, so keep that path independent of the DB.
-    if request.endpoint == "home" and request.method == "HEAD":
-        g.current_user = None
-        return "", 200
 
     g.current_user = get_authenticated_user()
 

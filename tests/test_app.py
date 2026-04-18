@@ -9,6 +9,16 @@ def test_index(app, client):
     assert res.status_code == 200
 
 
+def test_index_does_not_hit_auth_lookup(monkeypatch, client):
+    def fail_if_called():
+        raise AssertionError("auth lookup should not run for GET /")
+
+    monkeypatch.setattr("app.ensure_auth_storage", fail_if_called)
+
+    res = client.get("/")
+    assert res.status_code == 200
+
+
 def test_head_index_skips_auth_lookup(monkeypatch, client):
     def fail_if_called():
         raise AssertionError("auth lookup should not run for HEAD /")
