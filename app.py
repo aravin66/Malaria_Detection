@@ -19,6 +19,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 def load_local_env():
+    # Never overwrite Render-provided environment variables in production.
+    if os.getenv("RENDER", "").lower() == "true":
+        return
+
     env_path = Path(__file__).resolve().parent / ".env"
     if not env_path.exists():
         return
@@ -28,7 +32,7 @@ def load_local_env():
         if not stripped or stripped.startswith("#") or "=" not in stripped:
             continue
         key, value = stripped.split("=", 1)
-        os.environ[key.strip()] = value.strip()
+        os.environ.setdefault(key.strip(), value.strip())
 
 
 load_local_env()
@@ -543,6 +547,12 @@ def load_current_user():
     if request.endpoint == "healthz":
         g.current_user = None
         return
+
+    # Render's port probe uses HEAD /, so keep that path independent of the DB.
+    if request.endpoint == "home" and request.method == "HEAD":
+        g.current_user = None
+        return "", 200
+
     g.current_user = get_authenticated_user()
 
 
