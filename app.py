@@ -266,20 +266,20 @@ CHARTS_DATA = {
 
 CLASS_DETAILS = {
     0: {
-        "label": "Uninfected",
-        "badge": "Healthy Cell",
-        "summary": "No malaria parasite patterns were detected in the analyzed cell image.",
-        "symptoms": "No parasite-specific warning signs detected in this cell sample.",
-        "description": "The deployed CNN classified the uploaded blood smear image as uninfected. Continue with clinical correlation and additional sampling when required.",
-        "tone": "safe",
-    },
-    1: {
         "label": "Infected",
         "badge": "Malaria Detected",
         "summary": "Parasite-like patterns were detected in the analyzed blood smear image.",
         "symptoms": "Possible malaria warning signs can include fever, chills, headache, vomiting, fatigue, and muscle pain.",
         "description": "The deployed CNN found features consistent with an infected cell. This result should be reviewed alongside expert microscopy or laboratory confirmation.",
         "tone": "alert",
+    },
+    1: {
+        "label": "Uninfected",
+        "badge": "Healthy Cell",
+        "summary": "No malaria parasite patterns were detected in the analyzed cell image.",
+        "symptoms": "No parasite-specific warning signs detected in this cell sample.",
+        "description": "The deployed CNN classified the uploaded blood smear image as uninfected. Continue with clinical correlation and additional sampling when required.",
+        "tone": "safe",
     },
 }
 
@@ -691,8 +691,8 @@ def inject_asset_version():
 
 
 def build_sample_analysis(raw_result, prediction_index, model_name):
-    infected_score = float(raw_result[1] * 100)
-    uninfected_score = float(raw_result[0] * 100)
+    infected_score = float(raw_result[0] * 100)
+    uninfected_score = float(raw_result[1] * 100)
     confidence = float(np.max(raw_result) * 100)
     margin = abs(infected_score - uninfected_score)
 
@@ -708,7 +708,7 @@ def build_sample_analysis(raw_result, prediction_index, model_name):
         "predicted_label": CLASS_DETAILS[prediction_index]["label"],
         "score_matrix": [
             [round(infected_score, 2), round(uninfected_score, 2)],
-            [round(predicted_vector[1], 2), round(predicted_vector[0], 2)],
+            [round(predicted_vector[0], 2), round(predicted_vector[1], 2)],
         ],
     }
 
