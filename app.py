@@ -118,6 +118,7 @@ PROFILE_UPLOAD_DIR = Path(
     os.getenv("PROFILE_UPLOAD_DIR", STATIC_PROFILE_UPLOAD_DIR.as_posix())
 ).expanduser()
 ALLOWED_PROFILE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+ALLOWED_ANALYSIS_EXTENSIONS = {".png", ".jpg", ".jpeg"}
 PUBLIC_ENDPOINTS = {
     "healthz",
     "home",
@@ -618,6 +619,42 @@ def image_preprocess(img_bytes):
     return np.expand_dims(image_array, axis=0)
 
 
+def validate_blood_smear_upload(img_bytes, filename):
+    filename = secure_filename(filename or "")
+    extension = Path(filename).suffix.lower()
+    if extension not in ALLOWED_ANALYSIS_EXTENSIONS:
+        return False, "Please upload a JPG or PNG blood smear microscopy image."
+
+    try:
+        image = Image.open(BytesIO(img_bytes)).convert("RGB")
+        image.load()
+    except Exception:
+        return False, "We could not read that image file."
+
+    if image.width < 50 or image.height < 50:
+        return False, "Please upload a clearer segmented blood smear image."
+
+    analysis_image = image.resize((128, 128))
+    image_array = np.asarray(analysis_image, dtype=np.float32) / 255.0
+    gray = image_array.mean(axis=2)
+    channel_means = image_array.mean(axis=(0, 1))
+    channel_spread = float(channel_means.max() - channel_means.min())
+    green_dominance = float(channel_means[1] - max(channel_means[0], channel_means[2]))
+    texture = float(
+        np.mean(np.abs(np.diff(gray, axis=0))) + np.mean(np.abs(np.diff(gray, axis=1)))
+    )
+
+    # This is a lightweight suitability gate, not a medical classifier.
+    # It rejects obvious non-microscopy uploads before the CNN runs.
+    if texture < 0.025:
+        return False, "The uploaded image does not look like a segmented blood smear microscopy image."
+
+    if green_dominance > 0.12 and channel_spread > 0.18:
+        return False, "The uploaded image does not look like a blood smear microscopy image."
+
+    return True, None
+
+
 def image_to_data_url(img_bytes):
     encoded = base64.b64encode(img_bytes).decode("ascii")
     return f"data:image/png;base64,{encoded}"
@@ -920,6 +957,13 @@ def result():
         return render_template("form.html", **context)
 
     img_bytes = img.read()
+    is_valid_smear, validation_error = validate_blood_smear_upload(img_bytes, img.filename)
+    if not is_valid_smear:
+        context = common_context("preview")
+        context["error"] = validation_error
+        context["selected_model"] = selected_model
+        return render_template("form.html", **context)
+
     img_arr = image_preprocess(img_bytes)
     raw_result = value_predictor(img_arr, selected_model)
 

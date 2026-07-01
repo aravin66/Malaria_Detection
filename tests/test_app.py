@@ -1,4 +1,8 @@
-from app import parse_mysql_url, resolve_mysql_settings
+from io import BytesIO
+
+from PIL import Image
+
+from app import parse_mysql_url, resolve_mysql_settings, validate_blood_smear_upload
 
 
 def test_parse_mysql_url():
@@ -72,3 +76,14 @@ def test_form(app, client):
 def test_result(app, client):
     res = client.get("/result")
     assert res.status_code == 200
+
+
+def test_validate_blood_smear_upload_rejects_obvious_non_smear_image():
+    image = Image.new("RGB", (256, 256), color=(0, 255, 0))
+    buffer = BytesIO()
+    image.save(buffer, format="PNG")
+
+    is_valid, message = validate_blood_smear_upload(buffer.getvalue(), "landscape.png")
+
+    assert is_valid is False
+    assert "blood smear" in message.lower()
